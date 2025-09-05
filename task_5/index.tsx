@@ -1,14 +1,16 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import useSWR from 'swr';
+import { useState } from "react";
+import useSWR from "swr";
 
-import styles from './page.module.css';
+import styles from "./page.module.css";
 
-import { fetchOnePost } from '@/libs/fetchOnePost';
+import { fetchOnePost } from "@/libs/fetchOnePost";
+
+const KEY_QUERY = "KEY_QUERY"; // ключ для SWR, чтобы кэш был общий
 
 const ComponentOne = () => {
-    const { data } = useSWR('custom_key_1', fetchOnePost);
+    const { data } = useSWR(KEY_QUERY, fetchOnePost);
     //...some logic
 
     return data ? (
@@ -23,7 +25,9 @@ const ComponentOne = () => {
 };
 
 const ComponentTwo = () => {
-    const { data } = useSWR('custom_key_2', () => fetchOnePost({ delayMS: 2000 }));
+    const { data } = useSWR(KEY_QUERY, () =>
+        fetchOnePost({ delayMS: 2000 })
+    );
     //...some logic
 
     return data ? (
@@ -47,7 +51,9 @@ export default function Home() {
                 {showComponentTwo ? (
                     <ComponentTwo />
                 ) : (
-                    <button className={styles.btn} onClick={() => setShowComponentTwo(true)}>
+                    <button
+                        className={styles.btn}
+                        onClick={() => setShowComponentTwo(true)}>
                         Show ComponentTwo
                     </button>
                 )}
